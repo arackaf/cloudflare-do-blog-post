@@ -8,14 +8,18 @@ import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
 import type { QueryClient } from "@tanstack/react-query";
-
-const CURRENT_USER = "Adam";
+import { getCurrentUser } from "#/server/current-user";
+import { useState } from "react";
 
 interface MyRouterContext {
   queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  loader: async () => {
+    const user = getCurrentUser();
+    return { userPromise: user };
+  },
   head: () => ({
     meta: [
       {
@@ -53,6 +57,13 @@ const CartButton = () => {
 };
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<string | null>(null);
+  const { userPromise } = Route.useLoaderData();
+
+  userPromise.then((user) => {
+    setUser(user.name);
+  });
+
   return (
     <html lang="en">
       <head>
@@ -66,12 +77,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 <span className="text-xl font-bold tracking-tight text-orange-500">Edge Shop</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700">
-                  <User className="size-4 text-slate-400" aria-hidden />
-                  <span>
-                    Hello, <span className="font-medium text-slate-900">{CURRENT_USER}</span>
-                  </span>
-                </div>
+                {user ? (
+                  <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700">
+                    <User className="size-4 text-slate-400" aria-hidden />
+                    <span>
+                      Hello, <span className="font-medium text-slate-900">{user}</span>
+                    </span>
+                  </div>
+                ) : null}
                 <CartButton />
               </div>
             </div>
