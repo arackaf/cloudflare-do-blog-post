@@ -5,6 +5,7 @@ import { getProducts } from "#/server/get-products";
 import type { Product } from "#/server/get-products";
 import { openWebSocket } from "#/lib/openWebSocket";
 import { getCartForCurrentUser } from "#/server/getCartForCurrentUser";
+import { useRef, useState } from "react";
 
 const getSockets = createServerFn({ method: "GET" }).handler(async () => {
   const cart = await getCartForCurrentUser();
@@ -18,7 +19,7 @@ const addItem = createServerFn({ method: "POST" }).handler(async () => {
 
 const getItems = createServerFn({ method: "GET" }).handler(async () => {
   const cart = await getCartForCurrentUser();
-  const result = await cart.items();
+  const result = await cart.getCart();
   return { items: result.items };
 });
 
@@ -70,6 +71,8 @@ function ProductCard({ product }: { product: Product }) {
 
 function Home() {
   const products = Route.useLoaderData();
+  const inputMessageRef = useRef<HTMLInputElement>(null);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
@@ -78,6 +81,7 @@ function Home() {
           type="button"
           onClick={() => {
             openWebSocket().then((socket) => {
+              setSocket(socket);
               console.log("Socket open");
 
               socket.addEventListener("message", (event) => {
@@ -117,6 +121,18 @@ function Home() {
           className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
         >
           Get Items
+        </button>
+        <input type="text" ref={inputMessageRef} />
+        <button
+          type="button"
+          onClick={async () => {
+            const message = inputMessageRef.current?.value || "<empty>";
+
+            socket!.send(JSON.stringify({ message }));
+          }}
+          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
+        >
+          Send Message
         </button>
       </div>
       <div className="mb-8">

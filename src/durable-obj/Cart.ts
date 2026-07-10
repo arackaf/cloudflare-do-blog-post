@@ -20,6 +20,10 @@ export class CartDO extends DurableObject {
       webSocket: client,
     });
   }
+  webSocketMessage(socket: WebSocket, message: string | ArrayBuffer) {
+    console.log("received on DO", message);
+    socket.send(JSON.stringify({ message: "Message received", originalMessage: message }));
+  }
   allWebsockets() {
     return this.ctx.getWebSockets().map((ws) => ws.url);
   }
@@ -40,7 +44,7 @@ export class CartDO extends DurableObject {
       }
     }
   }
-  items() {
+  getCart() {
     return {
       items: [
         { id: 1, name: "Building Microservices" },
