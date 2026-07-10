@@ -39,6 +39,19 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   shellComponent: RootDocument,
 });
 
+const CartButton = () => {
+  return (
+    <button
+      type="button"
+      className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
+      aria-label="Shopping cart, 0 items"
+    >
+      <ShoppingCart className="size-4 text-slate-500" aria-hidden />
+      <span className="font-medium text-slate-900">0</span>
+    </button>
+  );
+};
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -59,14 +72,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                     Hello, <span className="font-medium text-slate-900">{CURRENT_USER}</span>
                   </span>
                 </div>
-                <button
-                  type="button"
-                  className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
-                  aria-label="Shopping cart, 0 items"
-                >
-                  <ShoppingCart className="size-4 text-slate-500" aria-hidden />
-                  <span className="font-medium text-slate-900">0</span>
-                </button>
+                <CartButton />
               </div>
             </div>
           </header>
