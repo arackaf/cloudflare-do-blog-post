@@ -5,6 +5,14 @@
   "observability": {
     "enabled": true,
   },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CART_DO",
+        "class_name": "CartDO",
+      },
+    ],
+  },
   "main": "@tanstack/react-start/server-entry",
   "compatibility_flags": ["nodejs_compat"],
 }
