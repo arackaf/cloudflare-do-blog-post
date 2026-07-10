@@ -1,7 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 
 import { getProducts } from "#/server/get-products";
 import type { Product } from "#/server/get-products";
+import { openWebSocket } from "#/lib/openWebSocket";
+import { getCartForCurrentUser } from "#/server/getCartForCurrentUser";
+
+const getSockets = createServerFn({ method: "GET" }).handler(async () => {
+  const cart = await getCartForCurrentUser();
+  return cart.allWebsockets();
+});
+
+const addItem = createServerFn({ method: "POST" }).handler(async () => {
+  const cart = await getCartForCurrentUser();
+  await cart.addItem();
+});
+
+const getItems = createServerFn({ method: "GET" }).handler(async () => {
+  const cart = await getCartForCurrentUser();
+  const result = await cart.items();
+  return { items: result.items };
+});
 
 export const Route = createFileRoute("/")({
   loader: () => getProducts(),
@@ -54,6 +73,52 @@ function Home() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div className="mt-4 flex gap-2 mb-4">
+        <button
+          type="button"
+          onClick={() => {
+            openWebSocket().then((socket) => {
+              console.log("Socket open");
+
+              socket.addEventListener("message", (event) => {
+                console.log(event);
+              });
+            });
+          }}
+          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
+        >
+          Subscribe
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            const result = await addItem();
+          }}
+          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
+        >
+          Add Item
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            const result = await getSockets();
+            console.log({ sockets: result });
+          }}
+          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
+        >
+          Get Sockets
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            const items = await getItems();
+            console.log({ items });
+          }}
+          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
+        >
+          Get Items
+        </button>
+      </div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Catalog</h1>
         <p className="mt-2 text-slate-600">Curated gear for developers who ship at the edge.</p>
