@@ -1,8 +1,4 @@
-import {
-  HeadContent,
-  Scripts,
-  createRootRouteWithContext,
-} from "@tanstack/react-router";
+import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { ShoppingCart, User } from "lucide-react";
@@ -54,18 +50,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <header className="border-b border-slate-200 bg-white">
             <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold tracking-tight text-orange-500">
-                  Edge Shop
-                </span>
+                <span className="text-xl font-bold tracking-tight text-orange-500">Edge Shop</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700">
                   <User className="size-4 text-slate-400" aria-hidden />
                   <span>
-                    Hello,{" "}
-                    <span className="font-medium text-slate-900">
-                      {CURRENT_USER}
-                    </span>
+                    Hello, <span className="font-medium text-slate-900">{CURRENT_USER}</span>
                   </span>
                 </div>
                 <button

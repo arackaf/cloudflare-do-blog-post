@@ -34,13 +34,9 @@ function ProductCard({ product }: { product: Product }) {
         <h2 className="mb-2 line-clamp-2 h-14 text-lg font-semibold leading-snug text-slate-900 group-hover:text-orange-600">
           {product.name}
         </h2>
-        <p className="mb-4 line-clamp-3 h-17 text-sm leading-relaxed text-slate-600">
-          {product.description}
-        </p>
+        <p className="mb-4 line-clamp-3 h-17 text-sm leading-relaxed text-slate-600">{product.description}</p>
         <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
-          <span className="text-lg font-semibold text-slate-900">
-            {formatPrice(product.price)}
-          </span>
+          <span className="text-lg font-semibold text-slate-900">{formatPrice(product.price)}</span>
           <button
             type="button"
             className="rounded-lg bg-orange-500 px-3.5 py-1.5 text-sm font-medium text-white transition hover:bg-orange-600"
@@ -59,12 +55,8 @@ function Home() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-          Catalog
-        </h1>
-        <p className="mt-2 text-slate-600">
-          Curated gear for developers who ship at the edge.
-        </p>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Catalog</h1>
+        <p className="mt-2 text-slate-600">Curated gear for developers who ship at the edge.</p>
       </div>
 
       <ul className="grid list-none gap-5 sm:grid-cols-2 lg:grid-cols-3">
