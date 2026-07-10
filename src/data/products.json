@@ -1,0 +1,122 @@
+[
+  {
+    "id": "building-microservices",
+    "name": "Building Microservices",
+    "description": "Sam Newman's guide to designing fine-grained systems. The reference for splitting monoliths into services that actually scale at the edge.",
+    "price": 49.99,
+    "category": "Books",
+    "image": "/images/products/building-microservices.jpg"
+  },
+  {
+    "id": "mbp-14-m4",
+    "name": "MacBook Pro 14\" (M4 Pro)",
+    "description": "16GB unified memory, 512GB SSD. The default laptop of every developer who deploys to Cloudflare Workers.",
+    "price": 1999.0,
+    "category": "Hardware",
+    "image": "/images/products/mbp-14-m4.jpg"
+  },
+  {
+    "id": "uplift-v2",
+    "name": "Uplift V2 Standing Desk",
+    "description": "Electric sit-stand desk with bamboo top. Because your spine deserves the same uptime as your Workers.",
+    "price": 649.0,
+    "category": "Furniture",
+    "image": "/images/products/uplift-v2.jpg"
+  },
+  {
+    "id": "keychron-q1-pro",
+    "name": "Keychron Q1 Pro",
+    "description": "Wireless mechanical keyboard with hot-swappable switches and QMK/VIA support. Clicky keys, quiet deploys.",
+    "price": 199.0,
+    "category": "Peripherals",
+    "image": "/images/products/keychron-q1-pro.jpg"
+  },
+  {
+    "id": "ddia",
+    "name": "Designing Data-Intensive Applications",
+    "description": "Martin Kleppmann's original deep dive into the principles behind reliable, scalable, and maintainable systems. The distributed-systems bible.",
+    "price": 54.99,
+    "category": "Books",
+    "image": "/images/products/ddia.jpg"
+  },
+  {
+    "id": "lg-34-ultrawide",
+    "name": "LG 34\" UltraWide Monitor",
+    "description": "3440×1440 IPS panel with USB-C passthrough. Enough horizontal space to read docs, logs, and HAR files side by side.",
+    "price": 449.99,
+    "category": "Hardware",
+    "image": "/images/products/lg-34-ultrawide.jpg"
+  },
+  {
+    "id": "sony-xm5",
+    "name": "Sony WH-1000XM5",
+    "description": "Industry-leading noise cancellation for deep focus during incident response or writing Durable Object migrations.",
+    "price": 349.99,
+    "category": "Audio",
+    "image": "/images/products/sony-xm5.jpg"
+  },
+  {
+    "id": "crafting-interpreters",
+    "name": "Crafting Interpreters",
+    "description": "Robert Nystrom walks you through building a language from scratch — lexer to bytecode VM. Perfect weekend reading between deploys.",
+    "price": 39.99,
+    "category": "Books",
+    "image": "/images/products/crafting-interpreters.jpg"
+  },
+  {
+    "id": "mx-master-3s",
+    "name": "Logitech MX Master 3S",
+    "description": "Ergonomic mouse with MagSpeed scroll wheel and multi-device switching. Pairs well with three terminal tabs and a dashboard.",
+    "price": 99.99,
+    "category": "Peripherals",
+    "image": "/images/products/mx-master-3s.jpg"
+  },
+  {
+    "id": "ergotron-lx",
+    "name": "Ergotron LX Monitor Arm",
+    "description": "VESA mount that frees desk space and lets you tilt your screen away from the afternoon glare on your standing desk.",
+    "price": 179.0,
+    "category": "Furniture",
+    "image": "/images/products/ergotron-lx.jpg"
+  },
+  {
+    "id": "modern-cpp-design",
+    "name": "Modern C++ Design",
+    "description": "Andrei Alexandrescu's classic on policy-based design and template metaprogramming. For when your hot path needs zero-cost abstractions.",
+    "price": 44.99,
+    "category": "Books",
+    "image": "/images/products/modern-cpp-design.jpg"
+  },
+  {
+    "id": "ember-mug-2",
+    "name": "Ember Smart Mug 2",
+    "description": "Temperature-controlled ceramic mug. Keeps your coffee hot through long wrangler dev sessions and cold starts.",
+    "price": 129.95,
+    "category": "Lifestyle",
+    "image": "/images/products/ember-mug-2.jpg"
+  },
+  {
+    "id": "caldigit-ts4",
+    "name": "CalDigit TS4 Thunderbolt Dock",
+    "description": "18 ports of connectivity chaos, neatly organized. One cable back to the MacBook when you return from the kitchen.",
+    "price": 399.99,
+    "category": "Hardware",
+    "image": "/images/products/caldigit-ts4.png"
+  },
+  {
+    "id": "aeron",
+    "name": "Herman Miller Aeron (Remastered)",
+    "description": "The chair your company won't buy you. Posture support for engineers who spend more time in chairs than in meetings.",
+    "price": 1395.0,
+    "category": "Furniture",
+    "image": "/images/products/aeron.png"
+  },
+  {
+    "id": "raspberry-pi-5",
+    "name": "Raspberry Pi 5 (8GB)",
+    "description": "A pocket-sized server for prototyping edge workloads before you graduate to Workers and Durable Objects.",
+    "price": 80.0,
+    "category": "Hardware",
+    "image": "/images/products/raspberry-pi-5.jpg"
+  }
+]
