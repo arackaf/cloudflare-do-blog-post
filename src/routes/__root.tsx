@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { User } from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
@@ -58,14 +58,24 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   Edge Shop
                 </span>
               </div>
-              <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700">
-                <User className="size-4 text-slate-400" aria-hidden />
-                <span>
-                  Signed in as{" "}
-                  <span className="font-medium text-slate-900">
-                    {CURRENT_USER}
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700">
+                  <User className="size-4 text-slate-400" aria-hidden />
+                  <span>
+                    Hello,{" "}
+                    <span className="font-medium text-slate-900">
+                      {CURRENT_USER}
+                    </span>
                   </span>
-                </span>
+                </div>
+                <button
+                  type="button"
+                  className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
+                  aria-label="Shopping cart, 0 items"
+                >
+                  <ShoppingCart className="size-4 text-slate-500" aria-hidden />
+                  <span className="font-medium text-slate-900">0</span>
+                </button>
               </div>
             </div>
           </header>
