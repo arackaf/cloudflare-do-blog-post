@@ -13,6 +13,12 @@
       },
     ],
   },
-  "main": "@tanstack/react-start/server-entry",
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["CartDO"],
+    },
+  ],
+  "main": "src/server.ts",
   "compatibility_flags": ["nodejs_compat"],
 }
