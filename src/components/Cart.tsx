@@ -24,9 +24,7 @@ export const CartButton = () => {
 
 export const CartContents: FC<{ contents: CartData }> = ({ contents }) => {
   if (contents.items.length === 0) {
-    return (
-      <p className="py-6 text-center text-sm text-slate-500">Your cart is empty.</p>
-    );
+    return <p className="py-6 text-center text-sm text-slate-500">Your cart is empty.</p>;
   }
 
   return (
