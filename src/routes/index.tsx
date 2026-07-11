@@ -7,11 +7,6 @@ import { openWebSocket } from "#/lib/openWebSocket";
 import { getCartForCurrentUser } from "#/server/getCartForCurrentUser";
 import { useRef, useState } from "react";
 
-const getSockets = createServerFn({ method: "GET" }).handler(async () => {
-  const cart = await getCartForCurrentUser();
-  return cart.allWebsockets();
-});
-
 const addItem = createServerFn({ method: "POST" }).handler(async () => {
   const cart = await getCartForCurrentUser();
   await cart.addItem();
@@ -101,16 +96,6 @@ function Home() {
           className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
         >
           Add Item
-        </button>
-        <button
-          type="button"
-          onClick={async () => {
-            const result = await getSockets();
-            console.log({ sockets: result });
-          }}
-          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
-        >
-          Get Sockets
         </button>
         <button
           type="button"

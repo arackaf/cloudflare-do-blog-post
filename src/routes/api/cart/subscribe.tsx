@@ -1,5 +1,5 @@
-import { getCartForCurrentUser } from "#/server/getCartForCurrentUser";
 import { createFileRoute } from "@tanstack/react-router";
+import { getCartForCurrentUser } from "#/server/getCartForCurrentUser";
 
 export const Route = createFileRoute("/api/cart/subscribe")({
   server: {
