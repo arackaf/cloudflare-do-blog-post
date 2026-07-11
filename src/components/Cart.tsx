@@ -1,4 +1,5 @@
 import type { CartContents as CartData } from "#/durable-obj/Cart";
+import { cn } from "#/lib/utils";
 import { getCartQueryOptions } from "#/server/get-cart-contents";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
@@ -16,14 +17,19 @@ export const CartButton: FC = () => {
   const { data: cart } = useQuery(getCartQueryOptions);
   const contentsCount = cart?.totalItems;
 
+  const cartReady = cart != null;
+
   return (
     <Sheet>
       <SheetTrigger
-        disabled={cart == null}
+        disabled={!cartReady}
         render={
           <button
             type="button"
-            className="flex items-center min-h-[34px] gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
+            className={cn(
+              "flex items-center min-h-[34px] gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700 transition",
+              cartReady ? "hover:border-orange-300 hover:bg-orange-50 cursor-pointer" : "cursor-default",
+            )}
             aria-label={`Shopping cart, ${cart?.totalItems ?? "loading"} items`}
           />
         }
