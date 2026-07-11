@@ -1,15 +1,106 @@
 import { DurableObject } from "cloudflare:workers";
 
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string;
+}
+
+export interface CartItem extends Product {
+  quantity: number;
+  lineTotal: number;
+}
+
+export interface CartContents {
+  items: CartItem[];
+  totalItems: number;
+  totalPrice: number;
+}
+
+interface CartItemRow extends Record<string, SqlStorageValue> {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string;
+  quantity: number;
+}
+
 export class CartDO extends DurableObject {
-  getCart() {
+  constructor(ctx: DurableObjectState, env: Env) {
+    super(ctx, env);
+
+    ctx.blockConcurrencyWhile(async () => {
+      ctx.storage.sql.exec(`
+        CREATE TABLE IF NOT EXISTS cart_items (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT NOT NULL,
+          price REAL NOT NULL,
+          category TEXT NOT NULL,
+          image TEXT NOT NULL,
+          quantity INTEGER NOT NULL DEFAULT 1
+        )
+      `);
+    });
+  }
+  getCart(): CartContents {
+    const rows = this.ctx.storage.sql
+      .exec<CartItemRow>(
+        `
+        SELECT
+          id,
+          name,
+          description,
+          price,
+          category,
+          image,
+          quantity
+        FROM cart_items
+        ORDER BY name
+      `,
+      )
+      .toArray();
+
+    const items: CartItem[] = rows.map((row) => ({
+      ...row,
+      lineTotal: row.price * row.quantity,
+    }));
+
     return {
-      items: [
-        { id: 1, name: "Building Microservices" },
-        { id: 2, name: "Standing Desk" },
-      ],
+      items,
+      totalItems: rows.reduce((sum, row) => sum + row.quantity, 0),
+      totalPrice: rows.reduce((sum, row) => sum + row.price * row.quantity, 0),
     };
   }
-  async addItem() {
+  async addItem(item: Product) {
+    this.ctx.storage.sql.exec(
+      `
+        INSERT INTO cart_items (
+          id,
+          name,
+          description,
+          price,
+          category,
+          image,
+          quantity
+        )
+        VALUES (?, ?, ?, ?, ?, ?, 1)
+
+        ON CONFLICT(id) DO UPDATE SET quantity = quantity + 1
+      `,
+      item.id,
+      item.name,
+      item.description,
+      item.price,
+      item.category,
+      item.image,
+    );
+
     for (const socket of this.ctx.getWebSockets()) {
       try {
         socket.send(
