@@ -1,7 +1,7 @@
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { ShoppingCart, User } from "lucide-react";
+import { User } from "lucide-react";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
@@ -10,6 +10,7 @@ import appCss from "../styles.css?url";
 import type { QueryClient } from "@tanstack/react-query";
 import { getCurrentUser } from "#/server/current-user";
 import { useState } from "react";
+import { CartButton } from "#/components/Cart";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -42,19 +43,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   }),
   shellComponent: RootDocument,
 });
-
-const CartButton = () => {
-  return (
-    <button
-      type="button"
-      className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
-      aria-label="Shopping cart, 0 items"
-    >
-      <ShoppingCart className="size-4 text-slate-500" aria-hidden />
-      <span className="font-medium text-slate-900">0</span>
-    </button>
-  );
-};
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<string | null>(null);
