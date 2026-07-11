@@ -1,4 +1,7 @@
 import type { CartContents as CartData } from "#/durable-obj/Cart";
+import { getCartQueryOptions } from "#/server/get-cart-contents";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useQuery } from "@tanstack/react-query";
 import { ShoppingCart } from "lucide-react";
 import type { FC } from "react";
 
@@ -9,16 +12,32 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export const CartButton = () => {
+export const CartButton: FC = () => {
+  const { data: cart } = useQuery(getCartQueryOptions);
+  const contentsCount = cart?.totalItems;
+
   return (
-    <button
-      type="button"
-      className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
-      aria-label="Shopping cart, 0 items"
-    >
-      <ShoppingCart className="size-4 text-slate-500" aria-hidden />
-      <span className="font-medium text-slate-900">0</span>
-    </button>
+    <Sheet>
+      <SheetTrigger
+        disabled={cart == null}
+        render={
+          <button
+            type="button"
+            className="flex items-center min-h-[34px] gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
+            aria-label={`Shopping cart, ${cart?.totalItems ?? "loading"} items`}
+          />
+        }
+      >
+        <ShoppingCart className="size-4 text-slate-500" aria-hidden />
+        <span className="font-medium text-slate-900 min-w-[1ch]">{contentsCount}</span>
+      </SheetTrigger>
+      <SheetContent side="right">
+        <SheetHeader>
+          <SheetTitle>Cart</SheetTitle>
+        </SheetHeader>
+        <div className="px-4">{cart ? <CartContents contents={cart} /> : null}</div>
+      </SheetContent>
+    </Sheet>
   );
 };
 

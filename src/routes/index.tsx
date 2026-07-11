@@ -12,12 +12,6 @@ const addItem = createServerFn({ method: "POST" }).handler(async () => {
   await cart.addItem();
 });
 
-const getItems = createServerFn({ method: "GET" }).handler(async () => {
-  const cart = await getCartForCurrentUser();
-  const result = await cart.getCart();
-  return { items: result.items };
-});
-
 export const Route = createFileRoute("/")({
   loader: () => getProducts(),
   component: Home,
