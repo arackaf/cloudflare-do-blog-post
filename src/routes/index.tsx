@@ -2,15 +2,19 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
 import { getProducts } from "#/server/get-products";
-import type { Product } from "#/server/get-products";
 import { openWebSocket } from "#/lib/openWebSocket";
 import { getCartForCurrentUser } from "#/server/getCartForCurrentUser";
 import { useRef, useState } from "react";
+import type { Product } from "#/durable-obj/Cart";
+import { useQueryClient } from "@tanstack/react-query";
+import { getCartQueryOptions } from "#/server/get-cart-contents";
 
-const addItem = createServerFn({ method: "POST" }).handler(async () => {
-  const cart = await getCartForCurrentUser();
-  await cart.addItem();
-});
+const addItem = createServerFn({ method: "POST" })
+  .validator((item: Product) => item)
+  .handler(async ({ data }) => {
+    const cart = await getCartForCurrentUser();
+    await cart.addItem(data);
+  });
 
 export const Route = createFileRoute("/")({
   loader: () => getProducts(),
@@ -49,6 +53,9 @@ function ProductCard({ product }: { product: Product }) {
           <button
             type="button"
             className="rounded-lg bg-orange-500 px-3.5 py-1.5 text-sm font-medium text-white transition hover:bg-orange-600"
+            onClick={() => {
+              addItem({ data: product });
+            }}
           >
             Add to cart
           </button>
@@ -62,6 +69,7 @@ function Home() {
   const products = Route.useLoaderData();
   const inputMessageRef = useRef<HTMLInputElement>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const queryClient = useQueryClient();
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
@@ -74,32 +82,16 @@ function Home() {
               console.log("Socket open");
 
               socket.addEventListener("message", (event) => {
-                console.log(event);
+                const payload = JSON.parse(event.data) as { type: string; data: any };
+                if (payload.type === "cart-updated") {
+                  queryClient.invalidateQueries({ queryKey: getCartQueryOptions.queryKey });
+                }
               });
             });
           }}
           className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
         >
           Subscribe
-        </button>
-        <button
-          type="button"
-          onClick={async () => {
-            const result = await addItem();
-          }}
-          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
-        >
-          Add Item
-        </button>
-        <button
-          type="button"
-          onClick={async () => {
-            const items = await getItems();
-            console.log({ items });
-          }}
-          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
-        >
-          Get Items
         </button>
         <input type="text" ref={inputMessageRef} />
         <button

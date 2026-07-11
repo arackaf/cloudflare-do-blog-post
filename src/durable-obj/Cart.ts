@@ -77,6 +77,10 @@ export class CartDO extends DurableObject {
       totalPrice: rows.reduce((sum, row) => sum + row.price * row.quantity, 0),
     };
   }
+  async clearCart() {
+    this.ctx.storage.sql.exec(`DELETE FROM cart_items`);
+    this.#sendCartUpdatedEvent();
+  }
   async addItem(item: Product) {
     this.ctx.storage.sql.exec(
       `
@@ -101,6 +105,9 @@ export class CartDO extends DurableObject {
       item.image,
     );
 
+    this.#sendCartUpdatedEvent();
+  }
+  #sendCartUpdatedEvent() {
     for (const socket of this.ctx.getWebSockets()) {
       try {
         socket.send(

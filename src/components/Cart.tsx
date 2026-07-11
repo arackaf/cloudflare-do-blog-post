@@ -1,8 +1,10 @@
 import type { CartContents as CartData } from "#/durable-obj/Cart";
 import { cn } from "#/lib/utils";
+import { clearCart } from "#/server/clear-cart";
 import { getCartQueryOptions } from "#/server/get-cart-contents";
+import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ShoppingCart } from "lucide-react";
 import type { FC } from "react";
 
@@ -48,6 +50,8 @@ export const CartButton: FC = () => {
 };
 
 export const CartContents: FC<{ contents: CartData }> = ({ contents }) => {
+  const queryClient = useQueryClient();
+
   if (contents.items.length === 0) {
     return <p className="py-6 text-center text-sm text-slate-500">Your cart is empty.</p>;
   }
@@ -76,6 +80,17 @@ export const CartContents: FC<{ contents: CartData }> = ({ contents }) => {
         <span className="text-sm font-medium text-slate-600">Total</span>
         <span className="text-base font-semibold text-slate-900">{formatPrice(contents.totalPrice)}</span>
       </div>
+      <Button
+        type="button"
+        variant="outline"
+        className="mt-4 w-full"
+        onClick={async () => {
+          await clearCart();
+          await queryClient.invalidateQueries({ queryKey: getCartQueryOptions.queryKey });
+        }}
+      >
+        Clear cart
+      </Button>
     </div>
   );
 };
