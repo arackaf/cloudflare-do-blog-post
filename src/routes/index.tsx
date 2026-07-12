@@ -4,7 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getProducts } from "#/server/get-products";
 import { openWebSocket } from "#/lib/openWebSocket";
 import { getCartForCurrentUser } from "#/server/getCartForCurrentUser";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Product } from "#/durable-obj/Cart";
 import { useQueryClient } from "@tanstack/react-query";
 import { getCartQueryOptions } from "#/server/get-cart-contents";
@@ -67,45 +67,28 @@ function ProductCard({ product }: { product: Product }) {
 
 function Home() {
   const products = Route.useLoaderData();
-  const inputMessageRef = useRef<HTMLInputElement>(null);
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [_, setSocket] = useState<WebSocket | null>(null);
   const queryClient = useQueryClient();
+
+  const socketInitializedRef = useRef(false);
+  useEffect(() => {
+    if (socketInitializedRef.current) return;
+    socketInitializedRef.current = true;
+    openWebSocket().then((socket) => {
+      setSocket(socket);
+      console.log("Socket open");
+
+      socket.addEventListener("message", (event) => {
+        const payload = JSON.parse(event.data) as { type: string; data: any };
+        if (payload.type === "cart-updated") {
+          queryClient.invalidateQueries({ queryKey: getCartQueryOptions.queryKey });
+        }
+      });
+    });
+  }, []);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <div className="mt-4 flex gap-2 mb-4">
-        <button
-          type="button"
-          onClick={() => {
-            openWebSocket().then((socket) => {
-              setSocket(socket);
-              console.log("Socket open");
-
-              socket.addEventListener("message", (event) => {
-                const payload = JSON.parse(event.data) as { type: string; data: any };
-                if (payload.type === "cart-updated") {
-                  queryClient.invalidateQueries({ queryKey: getCartQueryOptions.queryKey });
-                }
-              });
-            });
-          }}
-          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
-        >
-          Subscribe
-        </button>
-        <input type="text" ref={inputMessageRef} />
-        <button
-          type="button"
-          onClick={async () => {
-            const message = inputMessageRef.current?.value || "<empty>";
-
-            socket!.send(JSON.stringify({ message }));
-          }}
-          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 transition hover:border-orange-300 hover:bg-orange-50"
-        >
-          Send Message
-        </button>
-      </div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Catalog</h1>
         <p className="mt-2 text-slate-600">Curated gear for developers who ship at the edge.</p>
